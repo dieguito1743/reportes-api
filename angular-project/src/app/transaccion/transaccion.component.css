@@ -1,0 +1,72 @@
+.examplee {
+	width: 950px;
+	height: 1080px;
+}
+
+.example-container {
+	height: auto;
+	width: auto;
+	overflow: auto;
+}
+
+table {
+	width: 800px;
+}
+
+td.mat-column-star {
+	width: 20px;
+	padding-right: 8px;
+}
+
+th.mat-column-position, td.mat-column-position {
+	padding-left: 8px;
+}
+
+.mat-table-sticky:first-child {
+	border-right: 1px solid #e0e0e0;
+}
+
+.mat-table-sticky:last-child {
+	border-left: 1px solid #e0e0e0;
+}
+
+.paginatooor {
+	width: 100% !important;
+}
+
+.example-additional-selection {
+	opacity: 0.75;
+	font-size: 0.75em;
+}
+
+.comboUser {
+	width: 150px !important;
+	height: 25px !important;
+	font-size: 12px !important
+}
+
+.comboFilter {
+	width: 250px !important;
+	height: 25px !important;
+	font-size: 12px !important
+}
+
+.example-container {
+	display: flex;
+	flex-direction: column;
+	/*min-width: 600px;*/
+	height: auto;
+	width: auto;
+	overflow: auto;
+}
+
+.mat-table {
+	overflow: auto;
+	/*max-height: 800px;*/
+}
+
+.example-full-width {
+	width: 250px !important;
+	height: 25px !important;
+	font-size: 12px !important
+}

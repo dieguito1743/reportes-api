@@ -1,0 +1,110 @@
+<br />
+<label> Consulta General </label>
+
+<mat-form-field class="comboUser">
+	<mat-select [(value)]="selected" placeholder="Selecione Configuracion">
+		<mat-option *ngFor="let userconf of userconfigurations" [value]="userconf">
+			{{userconf.nameConf}}
+		</mat-option>
+	</mat-select>
+</mat-form-field>
+
+<br />
+<br />
+<mat-form-field class="comboUser">
+	<mat-select [(ngModel)]="ngFiltros" placeholder="Selecione Filtros" multiple>
+
+		<mat-select-trigger>
+			{{ngFiltros?.length >= 1 ? ngFiltros[0].display : ''}}
+			<span *ngIf="ngFiltros?.length > 1" class="example-additional-selection">
+				(+{{ngFiltros.length - 1}} {{ngFiltros?.length === 2 ? 'otro' : 'otros'}})
+			</span>
+		</mat-select-trigger>
+
+		<mat-option *ngFor="let filter of filters" [value]="filter">
+			{{filter.display}}
+		</mat-option>
+	</mat-select>
+</mat-form-field>
+
+<mat-form-field class="comboUser">
+	<mat-select [(ngModel)]="ngColumnas" placeholder="Selecione Columas" multiple>
+
+		<mat-select-trigger>
+			{{ngColumnas?.length >= 1 ? ngColumnas[0].display : ''}}
+			<span *ngIf="ngColumnas?.length > 1" class="example-additional-selection">
+				(+{{ngColumnas.length - 1}} {{ngColumnas?.length === 2 ? 'otro' : 'otros'}})
+			</span>
+		</mat-select-trigger>
+
+		<mat-option *ngFor="let column of columns" [value]="column">
+			{{column.display}}
+		</mat-option>
+	</mat-select>
+</mat-form-field>
+
+<br />
+<br />
+
+<label *ngFor="let ngf of aNgFiltros;let index = index;trackBy:trackByIndex;">
+	
+	<mat-form-field class="comboFilter" *ngIf="!utils.hiddenMultiComboBox(index, filtersaux)">
+		<mat-select [(ngModel)]="aNgFiltros[index]" [placeholder]="'Selecione ' + getPrintValue(index)" multiple>
+	
+			<mat-select-trigger>
+				{{aNgFiltros[index]?.length >= 1 ? aNgFiltros[index][0].display : ''}}
+				<span *ngIf="aNgFiltros[index]?.length > 1" class="example-additional-selection">
+					(+{{aNgFiltros[index].length - 1}} {{aNgFiltros[index]?.length === 2 ? 'otro' : 'otros'}})
+				</span>
+			</mat-select-trigger>
+			<mat-option>
+      			<ngx-mat-select-search></ngx-mat-select-search>
+    		</mat-option>
+	
+			<mat-option *ngFor="let fi of filters" [value]="fi">
+				{{fi.display}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+	
+	<mat-form-field class="example-full-width" *ngIf="!utils.hiddenText(index, filtersaux)">
+    	<input matInput [placeholder]="'Ingrese ' + getPrintValue(index)" [(ngModel)]="aNgFiltros[index]">
+  	</mat-form-field>
+	
+	<label *ngIf="!utils.hiddenDate(index, filtersaux)">
+		<mat-form-field fxFlexFill>
+	        <input matInput [matDatepicker]="pickerReminderi" [placeholder]="'Ingrese Fecha Inicio'" (dateChange)="utils.saveDate($event.value, index, 'start', aNgFiltros)" readonly />
+	        <mat-datepicker-toggle matSuffix [for]="pickerReminderi"></mat-datepicker-toggle>
+	    </mat-form-field>
+	    <mat-datepicker #pickerReminderi ></mat-datepicker>
+	    
+	    <mat-form-field fxFlexFill>
+	        <input matInput [matDatepicker]="pickerReminderf" [placeholder]="'Ingrese Fecha Fin'" (dateChange)="utils.saveDate($event.value, index, 'end', aNgFiltros)" readonly />
+	        <mat-datepicker-toggle matSuffix [for]="pickerReminderf"></mat-datepicker-toggle>
+	    </mat-form-field>
+	    <mat-datepicker #pickerReminderf ></mat-datepicker>
+	    
+    </label>
+	
+</label>
+
+<p>works</p>
+
+<button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o" style="font-size:48px;color:blue"></i></button>
+<mat-paginator [pageSizeOptions]="[100, 20, 50, 200]" showFirstLastButtons class="paginatooor" *ngIf="!hidden"></mat-paginator>
+<div class="example-container mat-elevation-z8" *ngIf="!hidden">
+	<div class="mat-elevation-z8">
+		<table mat-table [dataSource]="dataSource" matSort class="example-container mat-elevation-z8" mdbTable
+			mdbTableScroll scrollX="true" maxWidth="400">
+
+			<ng-container *ngFor="let column of columnsaux" [cdkColumnDef]="column.columnDef"
+				[sticky]="isSticky(column.columnDef)">
+				<mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
+				<mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</table>
+	</div>
+</div>
