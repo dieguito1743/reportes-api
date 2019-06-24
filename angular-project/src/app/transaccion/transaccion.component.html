@@ -46,10 +46,10 @@
 <br />
 <br />
 
-<label *ngFor="let ngf of aNgFiltros;let index = index;trackBy:trackByIndex;">
+<label *ngFor="let ngf of aNgFiltros;let index = index;trackBy:utils.trackByIndex;">
 	
 	<mat-form-field class="comboFilter" *ngIf="!utils.hiddenMultiComboBox(index, filtersaux)">
-		<mat-select [(ngModel)]="aNgFiltros[index]" [placeholder]="'Selecione ' + getPrintValue(index)" multiple>
+		<mat-select [(ngModel)]="aNgFiltros[index]" [placeholder]="'Selecione ' + utils.getPrintValue(index, filtersaux)" multiple>
 	
 			<mat-select-trigger>
 				{{aNgFiltros[index]?.length >= 1 ? aNgFiltros[index][0].display : ''}}
@@ -61,14 +61,14 @@
       			<ngx-mat-select-search></ngx-mat-select-search>
     		</mat-option>
 	
-			<mat-option *ngFor="let fi of filters" [value]="fi">
-				{{fi.display}}
+			<mat-option *ngFor="let fd of aFilterDefinition" [value]="fd.object">
+				{{fd.display}}
 			</mat-option>
 		</mat-select>
 	</mat-form-field>
 	
 	<mat-form-field class="example-full-width" *ngIf="!utils.hiddenText(index, filtersaux)">
-    	<input matInput [placeholder]="'Ingrese ' + getPrintValue(index)" [(ngModel)]="aNgFiltros[index]">
+    	<input matInput [placeholder]="'Ingrese ' + utils.getPrintValue(index, filtersaux)" [(ngModel)]="aNgFiltros[index]">
   	</mat-form-field>
 	
 	<label *ngIf="!utils.hiddenDate(index, filtersaux)">
@@ -91,20 +91,22 @@
 <p>works</p>
 
 <button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o" style="font-size:48px;color:blue"></i></button>
-<mat-paginator [pageSizeOptions]="[100, 20, 50, 200]" showFirstLastButtons class="paginatooor" *ngIf="!hidden"></mat-paginator>
-<div class="example-container mat-elevation-z8" *ngIf="!hidden">
-	<div class="mat-elevation-z8">
-		<table mat-table [dataSource]="dataSource" matSort class="example-container mat-elevation-z8" mdbTable
-			mdbTableScroll scrollX="true" maxWidth="400">
+<div class="component data component-card" *ngIf="!hidden">
+	<div class="mat-card">
+		<mat-paginator [pageSizeOptions]="[100, 20, 50, 200]" showFirstLastButtons *ngIf="!hidden"></mat-paginator>
+		<table mat-table [dataSource]="dataSource" matSort class="table" mdbTable
+			mdbTableScroll scrollX="true" maxWidth="150">
 
 			<ng-container *ngFor="let column of columnsaux" [cdkColumnDef]="column.columnDef"
-				[sticky]="isSticky(column.columnDef)">
-				<mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
-				<mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
+				[sticky]="isSticky(column.columnDef)" class="container">
+				<mat-header-cell *cdkHeaderCellDef mat-sort-header class="header-cell">
+					<span mat-sort-header class="sort-header">{{ column.header | uppercase }}</span>
+				</mat-header-cell>
+				<mat-cell *cdkCellDef="let row" class="cell">{{ column.cell(row) }}</mat-cell>
 			</ng-container>
 
-			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+			<mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>
 		</table>
 	</div>
 </div>

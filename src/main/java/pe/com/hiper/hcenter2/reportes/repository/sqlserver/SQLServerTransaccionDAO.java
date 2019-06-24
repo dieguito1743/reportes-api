@@ -30,7 +30,7 @@ public class SQLServerTransaccionDAO implements ICRUD<TransactionDTO> {
 	public List<TransactionDTO> findAll() {
 		// TODO Auto-generated method stub
 		// return null;
-		String query = "select top(900000) cTxMerchantId,cTxTerminalNum,cTxTxnNumber,fTxTxnDate,hTxTxnHour,cTxCompany,cTxStatus,cTxSettleStatus,cTxBatchId,cTxType,cTxForm,cTxResultId,cTxResultExt,nTxRRN,nTxAutorization,cTxCurrency,nTxAmount,cTxPaymentType,cTxDiffPayType,nTxDiffPayMonth,cTxDiffPayMFree,nTxCardNumber,dTxSitCpyCompany,cTxOrigTxnNumber,fTxOrigTxnDate from  tptransactionLog with(nolock)";
+		String query = "select top(100) cTxMerchantId,cTxTerminalNum,cTxTxnNumber,fTxTxnDate,hTxTxnHour,cTxCompany,cTxStatus,cTxSettleStatus,cTxBatchId,cTxType,cTxForm,cTxResultId,cTxResultExt,nTxRRN,nTxAutorization,cTxCurrency,nTxAmount,cTxPaymentType,cTxDiffPayType,nTxDiffPayMonth,cTxDiffPayMFree,nTxCardNumber,dTxSitCpyCompany,cTxOrigTxnNumber,fTxOrigTxnDate from  tptransactionLog with(nolock)";
 		PreparedStatement pst;
 		ResultSet rs;
 		try {

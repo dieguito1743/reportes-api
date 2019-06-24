@@ -25,7 +25,7 @@ export class ApiService {
   }
 
   getUserConfiguration(): Observable<HttpEvent<any>> {
-    const req = new HttpRequest('GET', `${END_POINT}/codUsuario/U00001`, {
+    const req = new HttpRequest('GET', `${END_POINT}/config/codUsuario/U00001`, {
       headers: this.headers,
       params: this.params,
       responseType: 'json'
