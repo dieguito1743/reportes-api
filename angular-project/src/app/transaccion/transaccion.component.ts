@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { ApiService } from '../service/api.service';
 import { ExcelService } from '../service/excel.service';
@@ -17,8 +18,8 @@ import { FilterDefinition } from '../modelo/filterDefinition';
 })
 export class TransaccionComponent implements OnInit {
 
-	/*@ViewChild(MatSort) */sort: MatSort;
-	/*@ViewChild(MatPaginator) */paginator: MatPaginator;
+	sort: MatSort;
+	paginator: MatPaginator;
 	transaccion: Transaccion[];
 
 	userconfigurations: Userconfiguration[];
@@ -44,7 +45,60 @@ export class TransaccionComponent implements OnInit {
 
 	hidden: boolean = true;
 
-	constructor(private apiService: ApiService, private excelService: ExcelService, public utils: Utils) {
+	constructor(private apiService: ApiService, private excelService: ExcelService, public utils: Utils, private route: ActivatedRoute) {
+		this.getFiltros();
+		this.getColumnas();
+	}
+
+	/*
+	* utilizar este método cuando se necesite exportar deesde el front cuando la cant de reg < 50 000
+	*/
+	exportAsXLSX(): void {
+		this.excelService.exportAsExcelFile(this.transaccion, 'sample');
+	}
+
+	ngOnInit() {
+		this.getConfiguracion(this.getUser());
+	}
+
+	parseTransaction(success: any) {
+		this.transaccion = success.body as Transaccion[];
+		this.dataSource = new MatTableDataSource(this.transaccion);
+		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.paginator;
+	}
+
+	createColumns() {
+		this.columnsaux = [];
+		if (this.ngColumnas != undefined && this.ngColumnas != null && (this.ngColumnas as Column[]).length >= 1) {
+			(this.ngColumnas as Column[]).forEach(
+				function (col) {
+					let aux = {};
+					(aux as ColumnDefinition).columnDef = col.columnOfTranasctionLog;
+					(aux as ColumnDefinition).header = col.display;
+					(aux as ColumnDefinition).cell = (element: Object) => `${element[col.columnOfTranasctionLog]}`;
+					this.columnsaux.push(aux);
+				}, this
+			);
+			let aux = {};
+			(aux as ColumnDefinition).columnDef = 'id';
+			(aux as ColumnDefinition).header = 'Id';
+			(aux as ColumnDefinition).cell = (element: any) => `${element['id']}`;
+			this.columnsaux.unshift((aux as ColumnDefinition));
+			this.displayedColumns = this.columnsaux.map(c => c.columnDef);
+		} else {
+			this.columnsaux = [];
+			this.displayedColumns = this.columnsaux.map(c => c.columnDef);
+		}
+
+	}
+
+	getUser(): string {
+		let codUsuario: string = this.route.snapshot.paramMap.get('codUsuario');
+		return codUsuario;
+	}
+
+	getFiltros() {
 		this.apiService.getFilter().subscribe(
 			success => {
 				if (success.type == 4) {
@@ -56,7 +110,9 @@ export class TransaccionComponent implements OnInit {
 				console.log(error);
 			}
 		);
+	}
 
+	getColumnas() {
 		this.apiService.getColumn().subscribe(
 			success => {
 				if (success.type == 4) {
@@ -68,8 +124,10 @@ export class TransaccionComponent implements OnInit {
 				console.log(error);
 			}
 		);
+	}
 
-		this.apiService.getUserConfiguration().subscribe(
+	getConfiguracion(codUsuario: string) {
+		this.apiService.getUserConfiguration(codUsuario).subscribe(
 			success => {
 				if (success.type == 4) {
 					this.parseUserConfig(success);
@@ -80,34 +138,6 @@ export class TransaccionComponent implements OnInit {
 				console.log(error);
 			}
 		);
-
-		this.apiService.getTransacciones().subscribe(
-			success => {
-				if (success.type == 4) {
-					this.parseTransaction(success);
-				}
-			},
-			error => {
-				console.log('doSomeThing');
-				console.log(error);
-			}
-		);
-	}
-
-	exportAsXLSX(): void {
-		this.hidden = false;
-		this.createColumns();
-		//this.excelService.exportAsExcelFile(this.transaccion, 'sample');
-	}
-
-	ngOnInit() {
-	}
-
-	parseTransaction(success: any) {
-		this.transaccion = success.body as Transaccion[];
-		this.dataSource = new MatTableDataSource(this.transaccion);
-		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
 	}
 
 	parseUserConfig(success: any) {
@@ -120,7 +150,7 @@ export class TransaccionComponent implements OnInit {
 				vfilters.forEach(function (option: string) {
 					let aux: string[] = option.split(':');
 					if (aux[1] == '1') {
-						let ng;
+						let ng: any;
 						if (this.aNgFiltros == undefined || this.aNgFiltros == null) {
 							this.aNgFiltros = [];
 						}
@@ -198,33 +228,24 @@ export class TransaccionComponent implements OnInit {
 		}, this);
 	}
 
-	createColumns() {
-		this.columnsaux = [];
-		if (this.ngColumnas != undefined && this.ngColumnas != null && (this.ngColumnas as Column[]).length >= 1) {
-			(this.ngColumnas as Column[]).forEach(
-				function (col) {
-					let aux = {};
-					(aux as ColumnDefinition).columnDef = col.columnOfTranasctionLog;
-					(aux as ColumnDefinition).header = col.display;
-					(aux as ColumnDefinition).cell = (element: Object) => `${element[col.columnOfTranasctionLog]}`;
-					this.columnsaux.push(aux);
-				}, this
-			);
-			let aux = {};
-			(aux as ColumnDefinition).columnDef = 'id';
-			(aux as ColumnDefinition).header = 'Id';
-			(aux as ColumnDefinition).cell = (element: any) => `${element['id']}`;
-			this.columnsaux.unshift((aux as ColumnDefinition));
-			this.displayedColumns = this.columnsaux.map(c => c.columnDef);
-		} else {
-			this.columnsaux = [];
-			this.displayedColumns = this.columnsaux.map(c => c.columnDef);
-		}
-
+	getTransacciones() {
+		this.apiService.getTransacciones().subscribe(
+			success => {
+				if (success.type == 4) {
+					this.parseTransaction(success);
+					this.hidden = false;
+					this.createColumns();
+				}
+			},
+			error => {
+				console.log('doSomeThing');
+				console.log(error);
+			}
+		);
 	}
 
 	isSticky(column: string): boolean {
-		if (column == 'id' || column == 'Id') {
+		if (column.toLowerCase() == 'id') {
 			return true;
 		}
 		return false;

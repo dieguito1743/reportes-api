@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Filter } from '../modelo/filter';
 
 @Injectable({
 	providedIn: 'root'
@@ -49,6 +50,20 @@ export class Utils {
 		let sRet: string;
 		sRet = object[index].display;
 		return sRet;
+	}
+
+	validateFilter(valueString: any, fil: Filter) {
+		if (fil != undefined && fil != null && fil.typeOfData.toLowerCase() == 'number') {
+			if (valueString.length > 0 && isNaN(valueString)) {
+				return new Object((valueString as string).substring(0, valueString.length - 1));
+			}
+		}
+		if (fil != undefined && fil != null && fil.typeOfData.toLowerCase() == 'string') {
+			if (valueString.length > 0 && isNaN(valueString)) {
+				return new Object((valueString as string).toLowerCase());
+			}
+		}
+		return new Object(valueString);
 	}
 
 }

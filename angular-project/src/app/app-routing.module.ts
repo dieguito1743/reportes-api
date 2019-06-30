@@ -4,8 +4,9 @@ import {RouterModule, Routes} from '@angular/router';
 import {TransaccionComponent} from './transaccion/transaccion.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/transaccion', pathMatch: 'full'},
-  {path: 'transaccion', component: TransaccionComponent}
+  {path: '', redirectTo: '/transaccion/:codUsuario', pathMatch: 'full'},
+  // {path: 'transaccion', component: TransaccionComponent},
+  {path: 'transaccion/:codUsuario', component: TransaccionComponent}
 ];
 
 @NgModule({

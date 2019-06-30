@@ -1,18 +1,99 @@
-
-.examplee {
-	width: 950px;
-	height: 1080px;
+.additional-selection {
+	opacity: 0.75;
+	font-size: 0.75em;
 }
 
-.example-container {
-	height: auto;
-	width: auto;
-	overflow: auto;
+.comboUser {
+	width: 150px !important;
+	height: 25px !important;
+	font-size: 12px !important
 }
 
-table {
-	width: 800px;
+.comboFilter {
+	padding-top: 10px !important;
+	width: 250px !important;
+	height: 25px !important;
+	font-size: 12px !important
 }
+
+.centrar {
+	position: absolute;
+	left:28%;
+	border:0px solid #808080;
+	padding:8px;
+	min-width: 50px;
+}
+
+.flotar-izq {
+	padding-top: 10px !important;
+	float: left;
+}
+
+.box-s{
+	position:relative;
+	display:block;
+	margin:10px;
+	float:left;
+	min-height:35px;
+	width:100%;
+	/*background:#ccc;*/
+}
+
+.box-m{
+	position:relative;
+	display:block;
+	margin:10px;
+	float:left;
+	min-height:80px;
+	width:100%;
+	/*background:#ccc;*/
+}
+
+.box-x{
+	position:relative;
+	display:block;
+	margin:10px;
+	float:left;
+	min-height:125px;
+	width:100%;
+	/*background:#ccc;*/
+}
+
+.box-boton{
+	position:relative;
+	display:block;
+	margin:0px;
+	float:left;
+	height: 58px;
+	width:100%;
+	/*background:#ccc;*/
+}
+
+.down {
+	position:absolute;
+	display:block;
+	bottom:10px;
+	left:10px;
+	/*background:#0CF;*/
+}
+
+.center {
+	position:absolute;
+	display:block;
+	bottom:30px;
+	left:35%;
+	/*background:#0CF;*/
+}
+
+.left {
+	float:left;
+	height:58px;
+	width:58px;
+	/*background:#0CF;*/
+}
+
+
+/*Estilos para la tabla y el paginado*/
 
 td.mat-column-star {
 	width: 20px;
@@ -31,53 +112,7 @@ th.mat-column-position, td.mat-column-position {
 	border-left: 1px solid #e0e0e0;
 }
 
-.paginatooor {
-	width: 100% !important;
-}
-
-.example-additional-selection {
-	opacity: 0.75;
-	font-size: 0.75em;
-}
-
-.comboUser {
-	width: 150px !important;
-	height: 25px !important;
-	font-size: 12px !important
-}
-
-.comboFilter {
-	width: 250px !important;
-	height: 25px !important;
-	font-size: 12px !important
-}
-
-.example-container {
-	display: flex;
-	flex-direction: column;
-	/*min-width: 600px;*/
-	height: auto;
-	width: auto;
-	overflow: auto;
-}
-
-.mat-table {
-	overflow: auto;
-	/*max-height: 800px;*/
-}
-
-.example-full-width {
-	width: 250px !important;
-	height: 25px !important;
-	font-size: 12px !important
-}
-
-
-
-
-
-
-mat-paginator{
+mat-paginator {
 	width:97vw;
 }
 
@@ -131,7 +166,7 @@ mat-paginator{
 		align-content: center;
 		text-align: center;
 		justify-content: center;
-		font-size: 12pt;
+		font-size: 10pt;
 	}
 
 	.header-cell {
@@ -142,4 +177,71 @@ mat-paginator{
 .mat-card {
 	min-width: max-content;
 	max-width: max-content;
+}
+
+
+/*boton buscar*/
+.boton-red {
+	outline:none;
+	background: #fa3c3c;
+	background-image: -webkit-linear-gradient(top, #fa3c3c, #b50000);
+	background-image: -moz-linear-gradient(top, #fa3c3c, #b50000);
+	background-image: -ms-linear-gradient(top, #fa3c3c, #b50000);
+	background-image: -o-linear-gradient(top, #fa3c3c, #b50000);
+	background-image: linear-gradient(to bottom, #fa3c3c, #b50000);
+	-webkit-border-radius: 60;
+	-moz-border-radius: 60;
+	border-radius: 60px;
+	font-family: Georgia;
+	color: #ffffff;
+	font-size: 12px;
+	padding: 10px 20px 10px 20px;
+	border-style: none;
+}
+
+.boton-red:hover {
+	background: #fa5252;
+	background-image: -webkit-linear-gradient(top, #fa5252, #d10202);
+	background-image: -moz-linear-gradient(top, #fa5252, #d10202);
+	background-image: -ms-linear-gradient(top, #fa5252, #d10202);
+	background-image: -o-linear-gradient(top, #fa5252, #d10202);
+	background-image: linear-gradient(to bottom, #fa5252, #d10202);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/*boton excel*/
+
+.boton {
+	outline:none;
+	background: none;
+	-webkit-border-radius: 60;
+	-moz-border-radius: 60;
+	border-radius: 60px;
+	font-size: 9px;
+	padding: 5px 5px 5px 5px;
+	border-style: none;
+	width: 45px;
+	height: 45px;
+}
+
+.boton:hover {
+	background: none;
+	text-decoration: none;
+	width: 50px;
+	height: 50px;
+}
+
+
+.tamicon {
+	width: 45px;
+	height: 45px;
+	margin-left: 5px;
+}
+
+.tamicon:hover{
+	width: 50px;
+	height: 50px;
+	margin-left: 5px;
+	cursor: pointer;
 }
