@@ -224,7 +224,7 @@ public class ForTestingAPIS {
 		objectDTO.setStatus("1");
 		objectDTO.setCodUsuario("U0000001");
 		objectDTO.setColumnId("1:1;2:1;3:0;4:1;5:0;6:0");
-		objectDTO.setFilterId("1:1;2:1;3:1;4:1;5:0;6:0");
+		objectDTO.setFilterId("1:0;2:0;3:1;4:1;5:0;6:1");
 		objectDTO.setNameConf("Análisis");
 		lRetList.add(objectDTO);
 
@@ -233,7 +233,7 @@ public class ForTestingAPIS {
 		objectDTO.setStatus("0");
 		objectDTO.setCodUsuario("U0000001");
 		objectDTO.setColumnId("1:0;2:0;3:0;4:0;5:0;6:0");
-		objectDTO.setFilterId("1:1;2:1;3:1;4:1;5:0;6:0");
+		objectDTO.setFilterId("1:1;2:0;3:1;4:0;5:1;6:0");
 		objectDTO.setNameConf("Test");
 		lRetList.add(objectDTO);
 

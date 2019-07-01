@@ -64,7 +64,7 @@
 	display:block;
 	margin:0px;
 	float:left;
-	height: 58px;
+	height: 25px;
 	width:100%;
 	/*background:#ccc;*/
 }
@@ -81,7 +81,7 @@
 	position:absolute;
 	display:block;
 	bottom:30px;
-	left:35%;
+	left:28%;
 	/*background:#0CF;*/
 }
 
@@ -126,7 +126,7 @@ mat-paginator {
 		width: 100vw;
 		max-width: 100%;
 		overflow: auto;
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 		display: table;
 		border-collapse: collapse;
 		margin: 0px;
@@ -166,7 +166,7 @@ mat-paginator {
 		align-content: center;
 		text-align: center;
 		justify-content: center;
-		font-size: 10pt;
+		font-size: 9pt;
 	}
 
 	.header-cell {
@@ -210,7 +210,7 @@ mat-paginator {
 	cursor: pointer;
 }
 
-/*boton excel*/
+/*boton excel y buscar*/
 
 .boton {
 	outline:none;
@@ -221,27 +221,64 @@ mat-paginator {
 	font-size: 9px;
 	padding: 5px 5px 5px 5px;
 	border-style: none;
-	width: 45px;
-	height: 45px;
+	width: 20px;
+	height: 20px;
 }
 
 .boton:hover {
 	background: none;
 	text-decoration: none;
-	width: 50px;
-	height: 50px;
+	width: 28px;
+	height: 28px;
 }
 
 
 .tamicon {
-	width: 45px;
-	height: 45px;
+	width: 20px;
+	height: 20px;
 	margin-left: 5px;
 }
 
 .tamicon:hover{
-	width: 50px;
-	height: 50px;
+	width: 28px;
+	height: 28px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+
+/*boton aplicar y guardar*/
+
+.boton-1 {
+	outline:none;
+	background: none;
+	-webkit-border-radius: 60;
+	-moz-border-radius: 60;
+	border-radius: 60px;
+	font-size: 9px;
+	padding: 5px 5px 5px 5px;
+	border-style: none;
+	width: 20px;
+	height: 20px;
+}
+
+.boton-1:hover {
+	background: none;
+	text-decoration: none;
+	width: 28px;
+	height: 28px;
+}
+
+
+.tamicon-1 {
+	width: 20px;
+	height: 20px;
+	margin-left: 5px;
+}
+
+.tamicon-1:hover{
+	width: 28px;
+	height: 28px;
 	margin-left: 5px;
 	cursor: pointer;
 }

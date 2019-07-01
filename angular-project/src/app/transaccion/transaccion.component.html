@@ -1,6 +1,6 @@
 <div class="box-s">
 	<label> Consulta General </label>
-
+	<label> &nbsp; &nbsp; </label>
 	<mat-form-field class="comboUser">
 		<mat-select [(value)]="selected" placeholder="Selecione Configuracion">
 			<mat-option *ngFor="let userconf of userconfigurations" [value]="userconf">
@@ -24,12 +24,21 @@
 					</span>
 				</mat-select-trigger>
 
-				<mat-option *ngFor="let filter of filters" [value]="filter">
+				<mat-option>
+					<ngx-mat-select-search [formControl]="fcSearchFiltros"></ngx-mat-select-search>
+				</mat-option>
+
+				<!--mat-option *ngFor="let filter of filters" [value]="filter">
+					{{filter.display}}
+				</mat-option-->
+
+				<mat-option *ngFor="let filter of filteredFiltrosMulti | async" [value]="filter">
 					{{filter.display}}
 				</mat-option>
+
 			</mat-select>
 		</mat-form-field>
-
+		<label> &nbsp; &nbsp; </label>
 		<mat-form-field class="comboUser">
 			<mat-select [(ngModel)]="ngColumnas" placeholder="Selecione Columas" multiple>
 
@@ -40,58 +49,100 @@
 					</span>
 				</mat-select-trigger>
 
-				<mat-option *ngFor="let column of columns" [value]="column">
+				<mat-option>
+					<ngx-mat-select-search [formControl]="fcSearchColumnas"></ngx-mat-select-search>
+				</mat-option>
+
+				<!--mat-option *ngFor="let column of columns" [value]="column">
+					{{column.display}}
+				</mat-option-->
+
+				<mat-option *ngFor="let column of filteredColumnasMulti | async" [value]="column">
 					{{column.display}}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
+
+		<button class="boton" (click)="aplicar()">
+			<span> <img [src]="'assets/check.png'" class="tamicon"> </span>
+		</button>
+		<label> &nbsp; &nbsp; &nbsp;</label>
+		<button class="boton" (click)="guardar()">
+			<span> <img [src]="'assets/save.png'" class="tamicon"> </span>
+		</button>
+
+
 	</div>
+
 </div>
 
 <div class="box-x">
 
 	<div *ngFor="let ngf of aNgFiltros;let index = index;trackBy:utils.trackByIndex;" class="flotar-izq">
 
-		<mat-form-field class="comboFilter" *ngIf="!utils.hiddenMultiComboBox(index, filtersaux)">
-			<mat-select [(ngModel)]="aNgFiltros[index]"
-				[placeholder]="'Selecione ' + utils.getPrintValue(index, filtersaux)" multiple>
+		<label *ngIf="!utils.hiddenMultiComboBox(index, filtersaux)">
+			<mat-form-field class="comboFilter">
+				<mat-select [(ngModel)]="aNgFiltros[index]"
+					[placeholder]="'Selecione ' + utils.getPrintValue(index, filtersaux)" multiple>
 
-				<mat-select-trigger>
-					{{aNgFiltros[index]?.length >= 1 ? aNgFiltros[index][0].display : ''}}
-					<span *ngIf="aNgFiltros[index]?.length > 1" class="additional-selection">
-						(+{{aNgFiltros[index].length - 1}} {{aNgFiltros[index]?.length === 2 ? 'otro' : 'otros'}})
-					</span>
-				</mat-select-trigger>
-				<mat-option>
-					<ngx-mat-select-search></ngx-mat-select-search>
-				</mat-option>
+					<mat-select-trigger>
+						{{aNgFiltros[index]?.length >= 1 ? aNgFiltros[index][0].display : ''}}
+						<span *ngIf="aNgFiltros[index]?.length > 1" class="additional-selection">
+							(+{{aNgFiltros[index].length - 1}} {{aNgFiltros[index]?.length === 2 ? 'otro' : 'otros'}})
+						</span>
+					</mat-select-trigger>
+					<mat-option>
+						<ngx-mat-select-search [formControl]="aFcFiltros[index]"></ngx-mat-select-search>
+					</mat-option>
 
-				<mat-option *ngFor="let fd of aFilterDefinition" [value]="fd.object">
-					{{fd.display}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
+					<mat-option *ngFor="let fd of aFilterDefinition" [value]="fd.object">
+						{{fd.display}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<label> &nbsp; </label>
+		</label>
 
-		<mat-form-field class="comboFilter" *ngIf="!utils.hiddenText(index, filtersaux)">
-			<input matInput [placeholder]="'Ingrese ' + utils.getPrintValue(index, filtersaux)"
-				[(ngModel)]="aNgFiltros[index]"
-				(input)="aNgFiltros[index] = utils.validateFilter($event.target.value, filtersaux[index])">
-		</mat-form-field>
+		<label *ngIf="!utils.hiddenText(index, filtersaux)">
+			<mat-form-field class="comboFilter">
+				<input matInput [placeholder]="'Ingrese ' + utils.getPrintValue(index, filtersaux)"
+					[(ngModel)]="aNgFiltros[index]"
+					(input)="aNgFiltros[index] = utils.validateFilter($event.target.value, filtersaux[index])"
+					[formControl]="aFcFiltros[index]">
+			</mat-form-field>
+			<label> &nbsp; </label>
+		</label>
 
+		<label *ngIf="!utils.hiddenHour(index, filtersaux)">
+			<mat-form-field class="comboFilter">
+				<input matInput
+					[placeholder]="'Ingrese (HH:MM) ' + utils.getPrintValue(index, filtersaux) + ' de Inicio'"
+					(input)="aNgFiltros[index] = utils.saveHour($event.target.value, index, 'start', filtersaux[index])">
+			</mat-form-field>
+			<label> &nbsp; </label>
+			<mat-form-field class="comboFilter">
+				<input matInput [placeholder]="'Ingrese (HH:MM) ' + utils.getPrintValue(index, filtersaux) + ' de Fin'"
+					(input)="aNgFiltros[index] = utils.saveHour($event.target.value, index, 'end', filtersaux[index])">
+			</mat-form-field>
+			<label> &nbsp; </label>
+		</label>
 
-		<mat-form-field fxFlexFill *ngIf="!utils.hiddenDate(index, filtersaux)" class="comboFilter">
-			<input matInput [matDatepicker]="pickerReminderi" [placeholder]="'Ingrese Fecha Inicio'"
-				(dateChange)="utils.saveDate($event.value, index, 'start', aNgFiltros)" readonly />
-			<mat-datepicker-toggle matSuffix [for]="pickerReminderi"></mat-datepicker-toggle>
-			<mat-datepicker #pickerReminderi></mat-datepicker>
-		</mat-form-field>
-
-		<mat-form-field fxFlexFill *ngIf="!utils.hiddenDate(index, filtersaux)" class="comboFilter">
-			<input matInput [matDatepicker]="pickerReminderf" [placeholder]="'Ingrese Fecha Fin'"
-				(dateChange)="utils.saveDate($event.value, index, 'end', aNgFiltros)" readonly />
-			<mat-datepicker-toggle matSuffix [for]="pickerReminderf"></mat-datepicker-toggle>
-			<mat-datepicker #pickerReminderf></mat-datepicker>
-		</mat-form-field>
+		<label *ngIf="!utils.hiddenDate(index, filtersaux)">
+			<mat-form-field fxFlexFill class="comboFilter">
+				<input matInput [matDatepicker]="pickerReminderi" [placeholder]="'Ingrese Fecha Inicio'"
+					(dateChange)="utils.saveDate($event.value, index, 'start', aNgFiltros)" readonly />
+				<mat-datepicker-toggle matSuffix [for]="pickerReminderi"></mat-datepicker-toggle>
+				<mat-datepicker #pickerReminderi></mat-datepicker>
+			</mat-form-field>
+			<label> &nbsp; </label>
+			<mat-form-field fxFlexFill class="comboFilter">
+				<input matInput [matDatepicker]="pickerReminderf" [placeholder]="'Ingrese Fecha Fin'"
+					(dateChange)="utils.saveDate($event.value, index, 'end', aNgFiltros)" readonly />
+				<mat-datepicker-toggle matSuffix [for]="pickerReminderf"></mat-datepicker-toggle>
+				<mat-datepicker #pickerReminderf></mat-datepicker>
+			</mat-form-field>
+			<label> &nbsp; </label>
+		</label>
 
 	</div>
 

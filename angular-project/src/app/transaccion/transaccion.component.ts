@@ -10,6 +10,9 @@ import { Filter } from '../modelo/filter';
 import { Column } from '../modelo/column';
 import { ColumnDefinition } from '../modelo/columnDefinition';
 import { FilterDefinition } from '../modelo/filterDefinition';
+import { ReplaySubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-transaccion',
@@ -29,10 +32,19 @@ export class TransaccionComponent implements OnInit {
 	selected: Userconfiguration = null;
 	languaje = 'es';
 
-	ngColumnas: Filter[];
-	ngFiltros: Column[];
+	ngColumnas: Column[];
+	ngFiltros: Filter[];
 	aNgFiltros: any[];
+	aFcFiltros: FormControl[] = [];
 	aFilterDefinition: FilterDefinition[];
+
+	fcSearchFiltros: FormControl = new FormControl();
+	filteredFiltrosMulti: ReplaySubject<Filter[]> = new ReplaySubject<Filter[]>(1);
+
+	fcSearchColumnas: FormControl = new FormControl();
+	filteredColumnasMulti: ReplaySubject<Column[]> = new ReplaySubject<Column[]>(1);
+
+	protected _onDestroy = new Subject<void>();
 
 	filtersaux: Filter[] = [];
 	columnsaux: ColumnDefinition[] = [];
@@ -57,8 +69,29 @@ export class TransaccionComponent implements OnInit {
 		this.excelService.exportAsExcelFile(this.transaccion, 'sample');
 	}
 
+	aplicar() {
+		/*actualiza los filtros*/
+		this.filtersaux = [];
+		this.aNgFiltros = [];
+		this.aFcFiltros = [];
+		this.ngFiltros.forEach(function(fill: Filter){
+			let ng: any;
+			let fc = new FormControl();
+			this.aNgFiltros.push(ng);
+			this.aFcFiltros.push(fc);
+			this.filtersaux.push(fill);
+		},this);
+	}
+
+	guardar() {
+		/*mandar a guardar al backend la configuracion*/
+	}
+
 	ngOnInit() {
+		this.utils.wait(3000);
 		this.getConfiguracion(this.getUser());
+		this.listengChangeValueOfSearFilter();
+		this.listengChangeValueOfSearColumn();
 	}
 
 	parseTransaction(success: any) {
@@ -151,37 +184,53 @@ export class TransaccionComponent implements OnInit {
 					let aux: string[] = option.split(':');
 					if (aux[1] == '1') {
 						let ng: any;
+						let fc = new FormControl();
 						if (this.aNgFiltros == undefined || this.aNgFiltros == null) {
 							this.aNgFiltros = [];
 						}
-						this.filters.forEach(function (fil: Filter) {
+						this.filters.filter(function (fil: Filter) {
 							if (fil.id == aux[0]) {
 								this.filtersaux.push(fil);
 								this.aNgFiltros.push(ng);
+								this.aFcFiltros.push(fc);
 								if (this.ngFiltros == undefined || this.ngFiltros == null)
 									this.ngFiltros = [];
 								(this.ngFiltros as Filter[]).push(fil);
 							}
-						}, this
-						);
+						}, this);
+						/*this.filters.forEach(function (fil: Filter) {
+							if (fil.id == aux[0]) {
+								this.filtersaux.push(fil);
+								this.aNgFiltros.push(ng);
+								this.aFcFiltros.push(fc);
+								if (this.ngFiltros == undefined || this.ngFiltros == null)
+									this.ngFiltros = [];
+								(this.ngFiltros as Filter[]).push(fil);
+							}
+						}, this);*/
 					}
-				}, this
-				);
+				}, this);
 				//id:status
 				let vcolumns: string[] = object.columnId.split(';');
 				vcolumns.forEach(function (option: string) {
 					let aux: string[] = option.split(':');
 					if (aux[1] == '1') {
-						this.columns.forEach(function (col: Column) {
+						this.columns.filter(function (col: Column) {
 							if (col.id == aux[0]) {
 								if (this.ngColumnas == undefined || this.ngColumnas == null)
 									this.ngColumnas = [];
 								(this.ngColumnas as Column[]).push(col);
 							}
 						}, this);
+						/*this.columns.forEach(function (col: Column) {
+							if (col.id == aux[0]) {
+								if (this.ngColumnas == undefined || this.ngColumnas == null)
+									this.ngColumnas = [];
+								(this.ngColumnas as Column[]).push(col);
+							}
+						}, this);*/
 					}
-				}, this
-				);
+				}, this);
 			}
 		}, this);
 	}
@@ -205,6 +254,8 @@ export class TransaccionComponent implements OnInit {
 				}
 			}, this);
 		}, this);
+
+		this.filteredFiltrosMulti.next(this.filters.slice());
 	}
 
 	parseColumn(success: any) {
@@ -226,6 +277,7 @@ export class TransaccionComponent implements OnInit {
 				}
 			}, this);
 		}, this);
+		this.filteredColumnasMulti.next(this.columns.slice());
 	}
 
 	getTransacciones() {
@@ -265,6 +317,46 @@ export class TransaccionComponent implements OnInit {
 		this.dataSource = new MatTableDataSource(this.transaccion);
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
+	}
+
+	listengChangeValueOfSearFilter() {
+		this.fcSearchFiltros.valueChanges
+			.pipe(takeUntil(this._onDestroy))
+			.subscribe(() => {
+				if (!this.filters) {
+					return;
+				}
+				let search = this.fcSearchFiltros.value;
+				if (!search) {
+					this.filteredFiltrosMulti.next(this.filters.slice());
+					return;
+				} else {
+					search = search.toLowerCase();
+				}
+				this.filteredFiltrosMulti.next(
+					this.filters.filter(filtro => filtro.display.toLowerCase().indexOf(search) > -1)
+				);
+			});
+	}
+
+	listengChangeValueOfSearColumn() {
+		this.fcSearchColumnas.valueChanges
+			.pipe(takeUntil(this._onDestroy))
+			.subscribe(() => {
+				if (!this.columns) {
+					return;
+				}
+				let search = this.fcSearchColumnas.value;
+				if (!search) {
+					this.filteredColumnasMulti.next(this.columns.slice());
+					return;
+				} else {
+					search = search.toLowerCase();
+				}
+				this.filteredColumnasMulti.next(
+					this.columns.filter(columna => columna.display.toLowerCase().indexOf(search) > -1)
+				);
+			});
 	}
 }
 

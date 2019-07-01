@@ -15,6 +15,16 @@ export class Utils {
 			object[index] = {};
 		}
 		object[index][propertie] = event;
+		console.log(object);
+		return object;
+	}
+
+	public saveHour(event: any, index: any, propertie: any, object: any) {
+		if (object[index] == undefined || object[index] == null) {
+			object[index] = {};
+		}
+		object[index][propertie] = event;
+		console.log(object);
 		return object;
 	}
 
@@ -29,6 +39,14 @@ export class Utils {
 	public hiddenText(index: any, object: any) {
 		let bRet: boolean = true;
 		if (this.hiddenMultiComboBox(index, object) && object != undefined && object != null && object[index].typeOfData != undefined && object[index].typeOfData != null && (object[index].typeOfData.toLowerCase() == 'string' || object[index].typeOfData.toLowerCase() == 'number')) {
+			bRet = false;
+		}
+		return bRet;
+	}
+
+	public hiddenHour(index: any, object: any) {
+		let bRet: boolean = true;
+		if (this.hiddenText(index, object) && this.hiddenMultiComboBox(index, object) && object != undefined && object != null && object[index].typeOfData != undefined && object[index].typeOfData != null && (object[index].typeOfData.toLowerCase() == 'hour')) {
 			bRet = false;
 		}
 		return bRet;
@@ -64,6 +82,14 @@ export class Utils {
 			}
 		}
 		return new Object(valueString);
+	}
+
+	wait(ms) {
+		let start = new Date().getTime();
+		let end = start;
+		while (end < start + ms) {
+			end = new Date().getTime();
+		}
 	}
 
 }
