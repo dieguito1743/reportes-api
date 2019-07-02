@@ -2,7 +2,7 @@
 	<label> Consulta General </label>
 	<label> &nbsp; &nbsp; </label>
 	<mat-form-field class="comboUser">
-		<mat-select [(value)]="selected" placeholder="Selecione Configuracion">
+		<mat-select [(value)]="selected" placeholder="Selecione Configuracion" (selectionChange)="act_conf()">
 			<mat-option *ngFor="let userconf of userconfigurations" [value]="userconf">
 				{{userconf.nameConf}}
 			</mat-option>

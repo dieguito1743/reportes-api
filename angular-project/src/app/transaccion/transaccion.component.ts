@@ -74,17 +74,40 @@ export class TransaccionComponent implements OnInit {
 		this.filtersaux = [];
 		this.aNgFiltros = [];
 		this.aFcFiltros = [];
-		this.ngFiltros.forEach(function(fill: Filter){
+		this.ngFiltros.forEach(function (fill: Filter) {
 			let ng: any;
 			let fc = new FormControl();
 			this.aNgFiltros.push(ng);
 			this.aFcFiltros.push(fc);
 			this.filtersaux.push(fill);
-		},this);
+		}, this);
 	}
 
 	guardar() {
 		/*mandar a guardar al backend la configuracion*/
+	}
+
+	act_conf() {
+		this.filtersaux = [];
+		this.aNgFiltros = [];
+		this.aFcFiltros = [];
+		this.ngFiltros = [];
+		let vfilters: string[] = this.selected.filterId.split(';');
+		vfilters.forEach(function (option: string) {
+			let aux: string[] = option.split(':');
+			if (aux[1] == '1') {
+				let ng: any;
+				let fc = new FormControl();
+				this.filters.filter(function (fil: Filter) {
+					if (fil.id == aux[0]) {
+						this.filtersaux.push(fil);
+						this.aNgFiltros.push(ng);
+						this.aFcFiltros.push(fc);
+						(this.ngFiltros as Filter[]).push(fil);
+					}
+				}, this);
+			}
+		}, this);
 	}
 
 	ngOnInit() {
