@@ -35,7 +35,7 @@
     "ngx-mat-select-search": "^1.7.6",
     "ngx-toastr": "^8.8.0",
     "rxjs": "6.0.0",
-    "xlsx": "^0.14.3",
+    "xlsx": "^0.17.0",
     "zone.js": "0.8.29"
   },
   "devDependencies": {
